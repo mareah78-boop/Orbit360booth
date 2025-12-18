@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orbit 360 Pro Booking</title>
+    <style>
+        body { font-family: -apple-system, sans-serif; background: #f0f2f5; padding: 15px; }
+        .container { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); max-width: 450px; margin: auto; }
+        h1 { color: #5d5cde; text-align: center; margin-bottom: 5px; }
+        .feature-box { background: #f8f9ff; padding: 12px; border-radius: 10px; border: 1px solid #e0e4ff; font-size: 13px; margin: 10px 0; }
+        label { display: block; margin-top: 15px; font-weight: 600; font-size: 12px; text-transform: uppercase; color: #4b4f56; }
+        input, select { width: 100%; padding: 12px; margin-top: 5px; border: 1px solid #dddfe2; border-radius: 10px; box-sizing: border-box; font-size: 16px; background: #f5f6f7; }
+        .total-box { margin-top: 20px; padding: 20px; background: #5d5cde; color: white; border-radius: 15px; text-align: center; }
+        .deposit { font-size: 14px; opacity: 0.9; margin-top: 5px; }
+        .btn-send { width: 100%; background: #007bff; color: white; border: none; padding: 16px; margin-top: 15px; border-radius: 12px; font-size: 16px; font-weight: bold; }
+        .btn-calc { width: 100%; background: #28a745; color: white; border: none; padding: 12px; margin-top: 10px; border-radius: 12px; font-size: 16px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Orbit Events 360</h1>
+    
+    <label>Client Name</label>
+    <input type="text" id="name" placeholder="Client Name">
+    
+    <label>Event Date</label>
+    <input type="date" id="date">
+
+    <label>Package</label>
+    <select id="pkg" onchange="update()">
+        <option value="650">Comet (2 Hrs) - $650</option>
+        <option value="850">Galaxy (3 Hrs) - $850</option>
+        <option value="1100">Supernova (4 Hrs) - $1100</option>
+    </select>
+
+    <div class="feature-box" id="feats">Includes: 1 Song, Standard Props, 2 Overlays</div>
+
+    <label>Backdrop Upgrade (+$150)</label>
+    <select id="extra" onchange="update()">
+        <option value="0">No Upgrade</option>
+        <option value="150">Include Backdrop</option>
+    </select>
+
+    <div class="total-box">
+        <div style="font-size: 14px;">Total Quote</div>
+        <h2 id="totalDisplay">$650</h2>
+        <div class="deposit" id="depositDisplay">50% Deposit Due: $325</div>
+    </div>
+
+    <button class="btn-send" onclick="sendSMS()">Text Quote to Client</button>
+</div>
+
+<script>
+    function update() {
+        let base = parseInt(document.getElementById('pkg').value);
+        let extra = parseInt(document.getElementById('extra').value);
+        let total = base + extra;
+        
+        document.getElementById('totalDisplay').innerText = "$" + total;
+        document.getElementById('depositDisplay').innerText = "50% Deposit Due: $" + (total / 2);
+
+        const feats = document.getElementById('feats');
+        if(base == 650) feats.innerText = "Includes: 1 Song, Standard Props, 2 Overlays";
+        if(base == 850) feats.innerText = "Includes: 2 Songs, Premium Props (Money Gun), 5 Overlays";
+        if(base == 1100) feats.innerText = "Includes: VIP Props, Unlimited Overlays, 4K Slow-Mo";
+    }
+
+    function sendSMS() {
+        let name = document.getElementById('name').value || "Client";
+        let date = document.getElementById('date').value;
+        let total = document.getElementById('totalDisplay').innerText;
+        let dep = document.getElementById('depositDisplay').innerText;
+        
+        let msg = "Hi " + name + "! This is Orbit Events 360. Your quote for " + date + " is " + total + ". " + dep + " to secure the date. Let us know if you're ready to book!";
+        
+        // This opens the iPhone Message app with the text pre-filled
+        window.location.href = "sms:?&body=" + encodeURIComponent(msg);
+    }
+</script>
+
+</body>
+</html>
